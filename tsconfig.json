@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    /* File Layout */
+    // "rootDir": "./src",
+    // "outDir": "./dist",
+
+    /* Environment Settings */
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+
+    /* Allow both JS & TS while migrating */
+    "allowJs": true,
+    "checkJs": false,
+
+    /* Type Declarations */
+    "types": ["vite/client"],
+
+    /* Output Options */
+    "sourceMap": true,
+
+    /* Strict Type-Checking */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    /* Compatibility */
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* JSX/TSX Support (Vue uses preserve mode) */
+    "jsx": "preserve"
+  },
+
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
