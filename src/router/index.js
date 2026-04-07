@@ -55,7 +55,7 @@ const router = createRouter({
       component: DashboardView,
       children: [
         {
-          path: '/OverView',
+          path: '',
           name: 'overview',
           component: OverView,
         },

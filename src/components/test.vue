@@ -183,6 +183,8 @@ const formatDate = (dateString: string) => {
     year: 'numeric',
   })
 }
+
+// ... existing imports
 </script>
 
 <template>
