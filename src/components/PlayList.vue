@@ -3,6 +3,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
 import IconNotFound from './IconNotFound.vue'
+import Pagination from './Pagination.vue'
 
 const route = useRoute()
 const loading = ref(false)
@@ -11,6 +12,13 @@ const userName = ref('')
 const email = ref('')
 const currentPage = ref(1)
 const totalItemsFromBackend = ref(0)
+const pagination = ref({
+  current_page: 1,
+  last_page: 1,
+  per_page: 10,
+  total: 0,
+  data: [],
+})
 
 const fetchOfficerActivities = async (page: number = 1) => {
   const userId = route.params.id
@@ -27,8 +35,10 @@ const fetchOfficerActivities = async (page: number = 1) => {
 
     // DRILL DOWN: root -> data -> data -> [...]
     const result = response.data.data
+    pagination.value = result
     activities.value = result.data || []
-    totalItemsFromBackend.value = result.total || 0
+    // totalItemsFromBackend.value = result.total || 0
+    currentPage.value = result.current_page
 
     // Grab the name from the first activity record if it exists
     if (activities.value.length > 0) {
@@ -227,7 +237,7 @@ watch(currentPage, (newPage) => {
       </div>
     </div>
 
-    <div v-if="activities.length > 0" class="flex justify-center mt-6">
+    <!-- <div v-if="activities.length > 0" class="flex justify-center mt-6">
       <vue-awesome-paginate
         :total-items="totalItemsFromBackend"
         :items-per-page="10"
@@ -238,6 +248,12 @@ watch(currentPage, (newPage) => {
         paginate-buttons-class="px-3 py-1 rounded border border-gray-200 dark:border-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition"
         active-button-class="bg-mainColor !text-white border-mainColor"
       />
-    </div>
+    </div> -->
+
+    <Pagination
+      v-if="activities.length > 0 && !loading"
+      :pagination="pagination"
+      @page-changed="onClickHandler"
+    />
   </div>
 </template>

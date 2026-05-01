@@ -16,6 +16,7 @@ import FilterGEST from './FilterGEST.vue'
 import IconEdit from './IconEdit.vue'
 import IconEye from './IconEye.vue'
 import { useRouter } from 'vue-router'
+import Pagination from './Pagination.vue'
 
 const router = useRouter()
 
@@ -35,6 +36,14 @@ const allGEST = ref<any[]>([])
 const currentPage = ref(1)
 const totalItemsFromBackend = ref(0)
 
+const pagination = ref({
+  current_page: 1,
+  last_page: 1,
+  per_page: 10,
+  total: 0,
+  data: [],
+})
+
 const getAllGEST = async (selected: string = '', page: number = 1) => {
   gestLoading.value = true
   searchString.value = selected
@@ -43,13 +52,22 @@ const getAllGEST = async (selected: string = '', page: number = 1) => {
     console.log('Fetching data for:', selected)
     // gestLoading.value = true
 
-    const response = await axios.get(`allofficerscode`, {
-      params: { search: selected, page: page },
+    // const response = await axios.get(`allofficerscode`, {
+    //   params: { search: selected, page: page },
+    // })
+    const response = await axios.get('allofficerscode', {
+      params: { search: selected, page },
     })
 
-    console.log(response)
-    allGEST.value = response.data.data.data || []
-    totalItemsFromBackend.value = response.data.data.total || 0
+    // console.log(response)
+    // allGEST.value = response.data.data.data || []
+    // totalItemsFromBackend.value = response.data.data.total || 0
+    const data = response.data.data
+    // const pagination = response.data.data
+
+    pagination.value = data
+    allGEST.value = data.data || []
+    currentPage.value = data.current_page
     // currentPage.value = page
   } catch (err) {
     console.log(err)
@@ -331,7 +349,7 @@ onMounted(() => {
           </table>
         </div>
 
-        <div v-if="allGEST.length > 0" class="flex justify-center mt-6">
+        <!-- <div v-if="allGEST.length > 0" class="flex justify-center mt-6">
           <vue-awesome-paginate
             :total-items="totalItemsFromBackend"
             :items-per-page="10"
@@ -342,7 +360,13 @@ onMounted(() => {
             paginate-buttons-class="px-3 py-1 rounded border border-gray-200 dark:border-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             active-button-class="bg-mainColor !text-white border-mainColor"
           />
-        </div>
+        </div> -->
+
+        <Pagination
+          v-if="allGEST.length > 0 && !gestLoading"
+          :pagination="pagination"
+          @page-changed="onClickHandler"
+        />
       </section>
     </div>
   </div>
